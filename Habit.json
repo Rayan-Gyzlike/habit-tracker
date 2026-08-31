@@ -1,0 +1,16 @@
+{
+    "habits": [
+        {
+            "id": 1,
+            "name": "python",
+            "completed": [
+                "2026-08-28"
+            ]
+        },
+        {
+            "id": 2,
+            "name": "Калистеника",
+            "completed": []
+        }
+    ]
+}
