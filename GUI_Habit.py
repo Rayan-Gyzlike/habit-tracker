@@ -57,7 +57,7 @@ class Habit(QWidget):
         self.rename.resize(self.rename.sizeHint())
         self.rename.clicked.connect(self.window_rename_habit)
 
-        self.habit_list = QPushButton("Список привычек", self)
+        self.habit_list = QPushButton("LIST HABITS", self)
         self.habit_list.resize(self.habit_list.sizeHint())
         self.habit_list.clicked.connect(self.window_show_list)
 

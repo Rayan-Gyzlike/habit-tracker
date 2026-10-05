@@ -1,7 +1,6 @@
-('C:\\Users\\azama\\Documents\\PythonProjets\\Habit '
- 'Tracker\\build\\GUI_Habit\\PYZ-00.pyz',
+('C:\\Users\\azama\\Documents\\PythonProjets\\habit-tracker\\build\\GUI_Habit\\PYZ-00.pyz',
  [('Habit',
-   'C:\\Users\\azama\\Documents\\PythonProjets\\Habit Tracker\\Habit.py',
+   'C:\\Users\\azama\\Documents\\PythonProjets\\habit-tracker\\Habit.py',
    'PYMODULE'),
   ('PyQt6',
    'C:\\Users\\azama\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\PyQt6\\__init__.py',
