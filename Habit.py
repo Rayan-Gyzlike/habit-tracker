@@ -1,24 +1,26 @@
 import json
 from pathlib import Path
 from datetime import datetime, timedelta
-import argparse
 
 
 # Загрузка привычек
 def load_data():
     default_data = {"habits": []}
-    file_path = Path("Habit.json")
+    script_dir = Path(__file__).resolve().parent
+    file_path = script_dir / "Habit.json"
     if not file_path.exists() or file_path.stat().st_size == 0:
-        with open("Habit.json", "w", encoding="utf8") as file:
+        with open(file_path, "w", encoding="utf8") as file:
             json.dump(default_data, file, ensure_ascii=False, indent=4)
-    with open("Habit.json", encoding="utf8") as file:
+    with open(file_path, encoding="utf8") as file:
         data = json.load(file)
     return data
 
 
 # Сохранение всех привычек
 def save_data(data):
-    with open("Habit.json", "w", encoding="utf8") as file:
+    script_dir = Path(__file__).resolve().parent
+    file_path = script_dir / "Habit.json"
+    with open(file_path, "w", encoding="utf8") as file:
         json.dump(data, file, ensure_ascii=False, indent=4)
 
 
@@ -37,7 +39,7 @@ def add_habit(data, name):
         new_habit = {"id": max_id + 1, "name": name, "completed": []}
         data["habits"].append(new_habit)
     else:
-        print("Такая привычка уже есть!!!")
+        return "Такая привычка уже есть!!!"
     return data
 
 
@@ -51,16 +53,18 @@ def done_habit(data, habit_name):
             if today not in habit["completed"]:
                 habit["completed"].append(today)
             else:
-                print("Сегодня уже было!!!")
+                return "Сегодня уже было!!!"
     if not (found_to_add_date):
-        print("Нет такой привычки я ничего не добавил")
+        return "Нет такой привычки"
     return data
 
 
 # Вывод привычек в терминал
 def list_habits(data):
+    lst = {}
     for habit in data["habits"]:
-        print(f"{habit['id']}. {habit['name']}")
+        lst[habit["id"]] = habit["name"]
+    return lst
 
 
 # Удалить привычку
@@ -74,10 +78,9 @@ def remove_habit(data, habit_name):
         data["habits"] = [
             habit for habit in data["habits"] if habit["name"] != habit_name
         ]
-        print(f"Привычка {habit_name} - удалена")
+        return f"Привычка {habit_name} - удалена", data
     else:
-        print("Нет такой привычки!!!")
-    return data
+        return "Нет такой привычки!!!"
 
 
 def stats_habit(data, name):
@@ -125,75 +128,17 @@ def stats_habit(data, name):
     if current_streak > best_streak:
         best_streak = current_streak
 
-    print(f"""
-          Статистика: {name}
+    return f"""
+Статистика: {name}
           
-          Выполнено дней: {all_days}
-          Последнее выполнение: {last_day}
-          Текущая серия: {current_streak}
-          Лучшая серия: {best_streak}""")
+Выполнено дней: {all_days}
+Последнее выполнение: {last_day}
+Текущая серия: {current_streak}
+Лучшая серия: {best_streak}"""
 
 
 def rename_habit(data, name, next_name):
     for habit in data["habits"]:
         if habit["name"].lower() == name.lower():
             habit["name"] = next_name
-            print("Привычка переименована")
-
-
-def main():
-    parser = argparse.ArgumentParser(description="Консольный трекер привычек")
-
-    subparsers = parser.add_subparsers(
-        dest="command", required=True, help="Доступные команды"
-    )
-
-    add_parser = subparsers.add_parser("add", help="Добавить новую привычку")
-    add_parser.add_argument("name", help="Название новой привычки")
-
-    done_parser = subparsers.add_parser(
-        "done", help="Отметить день, в который была сделана привычка"
-    )
-    done_parser.add_argument("name", help="Привычка, которая выполнена в этот день")
-
-    remove_parser = subparsers.add_parser("remove", help="Удалить привычку")
-    remove_parser.add_argument("name", help="Привычка, которую надо удалить")
-
-    subparsers.add_parser("list", help="Вывести список всех привычек")
-
-    stats_parser = subparsers.add_parser("stats", help="Узнать статистику привычки")
-    stats_parser.add_argument("name", help="Для какой привычки стаститика")
-
-    rename_parser = subparsers.add_parser("rename", help="Переименовать привычку")
-    rename_parser.add_argument("name")
-    rename_parser.add_argument("next_name")
-
-    args = parser.parse_args()
-
-    data = load_data()
-    needs_saving = False
-
-    match args.command:
-        case "add":
-            add_habit(data, args.name)
-            needs_saving = True
-        case "done":
-            done_habit(data, args.name)
-            needs_saving = True
-        case "remove":
-            remove_habit(data, args.name)
-            needs_saving = True
-        case "list":
-            list_habits(data)
-        case "stats":
-            stats_habit(data, args.name)
-        case "rename":
-            rename_habit(data, args.name, args.next_name)
-            needs_saving = True
-
-    if needs_saving:
-        save_data(data)
-
-
-if __name__ == "__main__":
-    main()
+            return "Привычка переименована"
