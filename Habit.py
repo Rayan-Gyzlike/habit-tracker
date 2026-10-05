@@ -2,6 +2,8 @@ import json
 from pathlib import Path
 from datetime import datetime, timedelta
 
+###Complete transition from CLI to GUI
+
 
 # Загрузка привычек
 def load_data():
